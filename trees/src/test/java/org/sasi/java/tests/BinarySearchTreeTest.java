@@ -23,11 +23,8 @@ public class BinarySearchTreeTest {
 
     @Test
     void toListOperationTest() {
-        BinarySearchTree<String> tree = BinarySearchTree.getNewInstance();
         List<String> dataToAdd = List.of("ABC", "CDE", "FGH");
-        for ( String data :dataToAdd) {
-            tree = tree.add(data);
-        }
+        BinarySearchTree<String> tree = BinarySearchTree.simpleBSTOf(dataToAdd);
         assertFalse(tree.isEmpty());
         assertEquals(3, tree.size());
         assertArrayEquals(dataToAdd.toArray(), tree.toList().toArray());
@@ -35,11 +32,8 @@ public class BinarySearchTreeTest {
 
     @Test
     void removeShouldRemoveAnElementFromTree() {
-        BinarySearchTree<String> tree = BinarySearchTree.getNewInstance();
         List<String> dataToAdd = List.of("ABC", "CDE", "FGH");
-        for ( String data :dataToAdd) {
-            tree = tree.add(data);
-        }
+        BinarySearchTree<String> tree = BinarySearchTree.simpleBSTOf(dataToAdd);
         assertFalse(tree.isEmpty());
         assertEquals(3, tree.size());
         assertEquals(2, tree.remove("ABC").size());

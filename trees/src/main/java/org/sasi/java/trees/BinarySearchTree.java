@@ -27,12 +27,21 @@ public abstract class BinarySearchTree<T extends  Comparable<T>> {
         return new EmptyTree<>();
     }
 
-    public static <T extends Comparable<T>> BinarySearchTree<T> of(T data) {
+    public static <T extends Comparable<T>> BinarySearchTree<T> simpleBSTOf(T data) {
         return new NonEmptyTree<>(data, new EmptyTree<>(), new EmptyTree<>());
     }
 
-    public static <T extends Comparable<T>> BinarySearchTree<T> of(List<T> allData) {
+    public static <T extends Comparable<T>> BinarySearchTree<T> simpleBSTOf(List<T> allData) {
         return new EmptyTree<T>().addAll(allData);
+    }
+
+    public static <T extends Comparable<T>> BinarySearchTree<T> heightMemoizedBSTOf(T data) {
+        return new HeightAwareNonEmptyTree<>(data, new EmptyTree<>(), new EmptyTree<>(), 1);
+    }
+
+    public static <T extends Comparable<T>> BinarySearchTree<T> heightMemoizedBSTOf(List<T> allData) {
+        HeightAwareEmptyTree<T> treeToAdd = new HeightAwareEmptyTree<>();
+        return treeToAdd.addAll(allData);
     }
 
 }
