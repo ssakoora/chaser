@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class EmptyTree<T extends Comparable<T>> extends BinarySearchTree<T> {
+class EmptyTree<T extends Comparable<T>> extends BinarySearchTree<T> {
     @Override
     public boolean isEmpty() {
         return true;
@@ -27,7 +27,7 @@ public class EmptyTree<T extends Comparable<T>> extends BinarySearchTree<T> {
 
     @Override
     public BinarySearchTree<T> add(T data) {
-        return new NonEmptyTree<T>(data, new EmptyTree<T>(), new EmptyTree<T>());
+        return new NonEmptyTree<>(data, new EmptyTree<>(), new EmptyTree<>());
     }
 
     @Override
@@ -36,13 +36,11 @@ public class EmptyTree<T extends Comparable<T>> extends BinarySearchTree<T> {
     }
 
     @Override
-    public StringBuffer printSelf(String prefix, StringBuffer bufferToPrint) {
-        return bufferToPrint.append(prefix+"|___ NONE ");
-    }
+    public StringBuffer printSelf(String prefix, StringBuffer bufferToPrint) { return bufferToPrint.append(prefix).append("|___ NONE "); }
 
     @Override
     public List<T> toList() {
-        return new ArrayList<T>();
+        return new ArrayList<>();
     }
 
     @Override

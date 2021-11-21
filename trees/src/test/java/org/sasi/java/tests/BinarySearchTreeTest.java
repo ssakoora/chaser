@@ -3,7 +3,6 @@ package org.sasi.java.tests;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.sasi.java.trees.BinarySearchTree;
-import org.sasi.java.trees.EmptyTree;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,7 +11,7 @@ public class BinarySearchTreeTest {
 
     @Test
     void simpleOperationsTest(){
-        BinarySearchTree<String> tree = new EmptyTree<>();
+        BinarySearchTree<String> tree = BinarySearchTree.getNewInstance();
         assertTrue(tree.isEmpty());
         tree = tree.add("ABCD");
         assertFalse(tree.isEmpty());
@@ -24,7 +23,7 @@ public class BinarySearchTreeTest {
 
     @Test
     void toListOperationTest() {
-        BinarySearchTree<String> tree = new EmptyTree<>();
+        BinarySearchTree<String> tree = BinarySearchTree.getNewInstance();
         List<String> dataToAdd = List.of("ABC", "CDE", "FGH");
         for ( String data :dataToAdd) {
             tree = tree.add(data);
@@ -36,7 +35,7 @@ public class BinarySearchTreeTest {
 
     @Test
     void removeShouldRemoveAnElementFromTree() {
-        BinarySearchTree<String> tree = new EmptyTree<>();
+        BinarySearchTree<String> tree = BinarySearchTree.getNewInstance();
         List<String> dataToAdd = List.of("ABC", "CDE", "FGH");
         for ( String data :dataToAdd) {
             tree = tree.add(data);
@@ -53,7 +52,7 @@ public class BinarySearchTreeTest {
     @Test
     void toListMustReturnASortedList() {
         ArrayList<String> randomList = new ArrayList<>();
-        BinarySearchTree<String> some_other_data = new EmptyTree<>();
+        BinarySearchTree<String> some_other_data = BinarySearchTree.getNewInstance();
         for (int i=0; i<1000; i++) {
             String randomString = new Random().ints(10, 65, 90)
                     .mapToObj(x -> String.valueOf((char) x)).collect(Collectors.joining());

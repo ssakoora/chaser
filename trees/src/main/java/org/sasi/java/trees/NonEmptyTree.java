@@ -45,22 +45,20 @@ class NonEmptyTree<T extends Comparable<T>> extends BinarySearchTree<T> {
         if(data.compareTo(this.data) == 0)
             return this;
         else if(data.compareTo(this.data) < 0)
-            return new NonEmptyTree<T>(this.data, lesser.add(data), greater);
+            return new NonEmptyTree<>(this.data, lesser.add(data), greater);
         else
-            return new NonEmptyTree<T>(this.data, lesser, greater.add(data));
+            return new NonEmptyTree<>(this.data, lesser, greater.add(data));
     }
 
     @Override
     public BinarySearchTree<T> remove(T data) {
         if( data.compareTo(this.data) == 0)
             if(!lesser.isEmpty())
-                return new NonEmptyTree<T>(lesser.getData().get(), lesser.remove(lesser.getData().get()), greater);
+                return new NonEmptyTree<>(lesser.getData().get(), lesser.remove(lesser.getData().get()), greater);
             else if (!greater.isEmpty())
-                return new NonEmptyTree<T>(greater.getData().get(), lesser, greater.remove(greater.getData().get()));
+                return new NonEmptyTree<>(greater.getData().get(), lesser, greater.remove(greater.getData().get()));
             else
-                return new EmptyTree<T>();
-
-//            return new EmptyTree<T>().addAll(lesser.toList()).addAll(greater.toList());
+                return new EmptyTree<>();
         else if (data.compareTo(this.data) < 0)
             return this.lesser.remove(data);
         else
@@ -70,7 +68,7 @@ class NonEmptyTree<T extends Comparable<T>> extends BinarySearchTree<T> {
     @Override
     public StringBuffer printSelf(String prefix, StringBuffer bufferToPrint) {
         return bufferToPrint
-                .append(prefix+"|___ "+data)
+                .append(prefix).append("|___ ").append(data)
                 .append("\n")
                 .append(lesser.printSelf(prefix+"\t|", new StringBuffer()))
                 .append("\n")
@@ -79,8 +77,7 @@ class NonEmptyTree<T extends Comparable<T>> extends BinarySearchTree<T> {
 
     @Override
     public List<T> toList() {
-        List<T> items = new ArrayList<T>();
-        items.addAll(lesser.toList());
+        List<T> items = new ArrayList<>(lesser.toList());
         items.add(data);
         items.addAll(greater.toList());
         return items;

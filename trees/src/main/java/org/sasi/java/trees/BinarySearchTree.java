@@ -22,5 +22,18 @@ public abstract class BinarySearchTree<T extends  Comparable<T>> {
         }
         return addedTree;
     }
+
+    public static <T extends Comparable<T>> BinarySearchTree<T> getNewInstance() {
+        return new EmptyTree<>();
+    }
+
+    public static <T extends Comparable<T>> BinarySearchTree<T> of(T data) {
+        return new NonEmptyTree<>(data, new EmptyTree<>(), new EmptyTree<>());
+    }
+
+    public static <T extends Comparable<T>> BinarySearchTree<T> of(List<T> allData) {
+        return new EmptyTree<T>().addAll(allData);
+    }
+
 }
 
