@@ -14,47 +14,57 @@ public class HeightAwareNonEmptyTree<T extends Comparable<T>> extends NonEmptyTr
     }
 
     @Override
-    public BinarySearchTree<T> add(T data) {
+    public HeightAwareNonEmptyTree<T> add(T data) {
         if(data.compareTo(this.data) == 0)
             return this;
-        else if(data.compareTo(this.data) < 0)
+        else if(data.compareTo(this.data) < 0) {
+            BinarySearchTree<T> newLesser = lesser.add(data);
             return new HeightAwareNonEmptyTree<>(
                     this.data,
-                    lesser.add(data),
+                    newLesser,
                     greater,
-                    this.height+1
+                    Math.max(newLesser.height(), greater.height())+1
             );
-        else
+        } else {
+            BinarySearchTree<T> newGreater = greater.add(data);
             return new HeightAwareNonEmptyTree<>(
                     this.data,
                     lesser,
-                    greater.add(data),
-                    this.height+1
+                    newGreater,
+                    Math.max(lesser.height(), newGreater.height())+1
             );
+        }
     }
 
     @Override
     public BinarySearchTree<T> remove(T data) {
         if( data.compareTo(this.data) == 0)
-            if(!lesser.isEmpty())
+            if(!lesser.isEmpty()) {
+                BinarySearchTree<T> newLesser = lesser.remove(lesser.getData().get());
                 return new HeightAwareNonEmptyTree<>(
                         lesser.getData().get(),
-                        lesser.remove(lesser.getData().get()),
+                        newLesser,
                         greater,
-                        Math.max(lesser.height()-1, greater.height())
+                        Math.max(newLesser.height(), greater.height())+1
                 );
-            else if (!greater.isEmpty())
+            } else if (!greater.isEmpty()) {
+                BinarySearchTree<T> newGreater = greater.remove(greater.getData().get());
                 return new HeightAwareNonEmptyTree<>(
                         greater.getData().get(),
                         lesser,
-                        greater.remove(greater.getData().get()),
-                        Math.max(lesser.height(), greater.height()-1)
+                        newGreater,
+                        Math.max(lesser.height(), newGreater.height())+1
                 );
-            else
+            } else
                 return new HeightAwareEmptyTree<>();
         else if (data.compareTo(this.data) < 0)
             return this.lesser.remove(data);
         else
             return this.greater.remove(data);
+    }
+
+    @Override
+    public int height() {
+        return this.height;
     }
 }

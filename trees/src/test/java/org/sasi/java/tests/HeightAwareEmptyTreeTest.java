@@ -15,7 +15,7 @@ public class HeightAwareEmptyTreeTest {
     public void memoizedHeight_and_calculatedHeight_should_be_the_same_for_add_operations(){
         List<String> data = List.of("DFDFDFD","ERERERER","FFFFF", "AAAAA", "DDDDD", "RRRRRR");
         BinarySearchTree<String> simpleBST = BinarySearchTree.simpleBSTOf(data);
-        BinarySearchTree<String> heightMemoizedBST = BinarySearchTree.heightMemoizedBSTOf(data);
+        BinarySearchTree<String> heightMemoizedBST = BinarySearchTree.heightAwareBSTOf(data);
         System.out.println(simpleBST.printSelf("\t", new StringBuffer()).toString());
         System.out.println("\n\n\n");
         System.out.println(heightMemoizedBST.printSelf("\t\t", new StringBuffer()).toString());
@@ -26,7 +26,7 @@ public class HeightAwareEmptyTreeTest {
     public void memoizedHeight_and_calculatedHeight_should_be_the_same_for_remove_operations(){
         List<String> data = List.of("DFDFDFD","ERERERER","FFFFF", "AAAAA", "DDDDD", "RRRRRR");
         BinarySearchTree<String> simpleBST = BinarySearchTree.simpleBSTOf(data);
-        BinarySearchTree<String> heightMemoizedBST = BinarySearchTree.heightMemoizedBSTOf(data);
+        BinarySearchTree<String> heightMemoizedBST = BinarySearchTree.heightAwareBSTOf(data);
         Assertions.assertEquals(simpleBST.height(), heightMemoizedBST.height());
         for (String d : data) {
             Assertions.assertEquals(simpleBST.remove(d).height(), heightMemoizedBST.remove(d).height());
@@ -41,7 +41,7 @@ public class HeightAwareEmptyTreeTest {
     @Test
     void removeShouldRemoveAnElementFromTree() {
         List<String> dataToAdd = List.of("ABC", "CDE", "FGH");
-        BinarySearchTree<String> tree = BinarySearchTree.heightMemoizedBSTOf(dataToAdd);
+        BinarySearchTree<String> tree = BinarySearchTree.heightAwareBSTOf(dataToAdd);
         assertFalse(tree.isEmpty());
         assertEquals(3, tree.size());
         assertEquals(2, tree.remove("ABC").size());
