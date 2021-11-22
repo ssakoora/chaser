@@ -1,19 +1,19 @@
 package org.sasi.java.tests;
 
+import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.sasi.java.trees.BinarySearchTree;
+import org.sasi.java.trees.SimpleBST;
 
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class BinarySearchTreeTest {
 
     @Test
     void simpleOperationsTest(){
-        BinarySearchTree<String> tree = BinarySearchTree.getNewInstance();
-        assertTrue(tree.isEmpty());
-        tree = tree.add("ABCD");
+        BinarySearchTree<String> tree = SimpleBST.of("ABCD");
         assertFalse(tree.isEmpty());
         assertEquals(1,tree.size());
         tree = tree.add("EFGH");
@@ -24,7 +24,7 @@ public class BinarySearchTreeTest {
     @Test
     void toListOperationTest() {
         List<String> dataToAdd = List.of("ABC", "CDE", "FGH");
-        BinarySearchTree<String> tree = BinarySearchTree.simpleBSTOf(dataToAdd);
+        BinarySearchTree<String> tree = SimpleBST.of(dataToAdd);
         assertFalse(tree.isEmpty());
         assertEquals(3, tree.size());
         assertArrayEquals(dataToAdd.toArray(), tree.toList().toArray());
@@ -33,7 +33,7 @@ public class BinarySearchTreeTest {
     @Test
     void removeShouldRemoveAnElementFromTree() {
         List<String> dataToAdd = List.of("ABC", "CDE", "FGH");
-        BinarySearchTree<String> tree = BinarySearchTree.simpleBSTOf(dataToAdd);
+        BinarySearchTree<String> tree = SimpleBST.of(dataToAdd);
         assertFalse(tree.isEmpty());
         assertEquals(3, tree.size());
         assertEquals(2, tree.remove("ABC").size());
@@ -45,14 +45,8 @@ public class BinarySearchTreeTest {
 
     @Test
     void toListMustReturnASortedList() {
-        ArrayList<String> randomList = new ArrayList<>();
-        BinarySearchTree<String> some_other_data = BinarySearchTree.getNewInstance();
-        for (int i=0; i<1000; i++) {
-            String randomString = new Random().ints(10, 65, 90)
-                    .mapToObj(x -> String.valueOf((char) x)).collect(Collectors.joining());
-            some_other_data = some_other_data.add(randomString);
-            randomList.add(randomString);
-        }
+        List<String> randomList = IntStream.range(0, 10000).mapToObj(BinarySearchTreeBuilder::generateRandomString).collect(toList());
+        BinarySearchTree<String> some_other_data = SimpleBST.of(randomList);
         assertEquals(randomList.size(), some_other_data.size());
         Object[] expected = randomList.toArray();
         Arrays.sort(expected);

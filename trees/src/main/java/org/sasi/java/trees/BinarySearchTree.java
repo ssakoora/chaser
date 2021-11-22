@@ -23,38 +23,5 @@ public abstract class BinarySearchTree<T extends  Comparable<T>> {
         return addedTree;
     }
 
-    public static <T extends Comparable<T>> BinarySearchTree<T> getNewInstance() {
-        return new EmptyTree<>();
-    }
-
-    public static <T extends Comparable<T>> BinarySearchTree<T> simpleBSTOf(T data) {
-        return new NonEmptyTree<>(data, new EmptyTree<>(), new EmptyTree<>());
-    }
-
-    public static <T extends Comparable<T>> BinarySearchTree<T> simpleBSTOf(List<T> allData) {
-        return new EmptyTree<T>().addAll(allData);
-    }
-
-    public static <T extends Comparable<T>> BinarySearchTree<T> heightAwareBSTOf(T data) {
-        return new HeightAwareNonEmptyTree<>(data, new HeightAwareEmptyTree<>(), new HeightAwareEmptyTree<>(), 1);
-    }
-
-    public static <T extends Comparable<T>> BinarySearchTree<T> heightAwareBSTOf(List<T> allData) {
-        HeightAwareEmptyTree<T> treeToAdd = new HeightAwareEmptyTree<>();
-        return treeToAdd.addAll(allData);
-    }
-
-    public static <T extends Comparable<T>> BinarySearchTree<T> simpleBalancedBSTOf(T data) {
-        return new SimpleBalancedBinarySearchTree<>(data,
-                new SimpleBalancedBinarySearchEmptyTree<>(),
-                new SimpleBalancedBinarySearchEmptyTree<>(),
-                1);
-    }
-
-    public static <T extends Comparable<T>> BinarySearchTree<T> simpleBalancedBSTOf(List<T> allData) {
-        SimpleBalancedBinarySearchEmptyTree<T> treeToAdd = new SimpleBalancedBinarySearchEmptyTree<>();
-        return treeToAdd.addAll(allData);
-    }
-
 }
 
