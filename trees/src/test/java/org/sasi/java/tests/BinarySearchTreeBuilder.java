@@ -6,7 +6,6 @@ import org.sasi.java.trees.HeightAwareBST;
 import org.sasi.java.trees.SimpleBalancedBST;
 import org.sasi.java.trees.SimpleBST;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
@@ -15,24 +14,33 @@ import static java.util.stream.Collectors.*;
 
 public class BinarySearchTreeBuilder {
 
+    List<String> largeRandomData = IntStream.range(0, 10000).mapToObj(BinarySearchTreeBuilder::generateRandomString).collect(toList());
+    List<Integer> largeSortedData = IntStream.range(0, 10000).boxed().collect(toList());
+
     @Test
-    public void height_test_for_Balanced_Binary_Search_Tree() {
-        List<Integer> data = IntStream.range(0, 10000).boxed().collect(toList());
-        BinarySearchTree<Integer> heightAwareTree = HeightAwareBST.of(data);
+    public void log_time_simple_BST_large_sorted_data() {
+        BinarySearchTree<Integer> heightAwareTree = HeightAwareBST.of(largeSortedData);
         System.out.println("Height of height aware tree - for sorted values : "
                 + heightAwareTree.height());
-        BinarySearchTree<Integer> simpleBalancedBST = SimpleBalancedBST.of(data);
+    }
+
+    @Test
+    public void log_time_balanced_BST_large_sorted_data() {
+        BinarySearchTree<Integer> simpleBalancedBST = SimpleBalancedBST.of(largeSortedData);
         System.out.println("Height of Simple Balanced Tree - for sorted values : "
                 + simpleBalancedBST.height());
     }
 
     @Test
-    public void height_test_for_Balanced_Binary_Search_Tree_String_values() {
-        List<String> data = IntStream.range(0, 10000).mapToObj(BinarySearchTreeBuilder::generateRandomString).collect(toList());
-        BinarySearchTree<String> heightAwareTree = HeightAwareBST.of(data);
+    public void log_time_simple_BST_large_random_data() {
+        BinarySearchTree<String> heightAwareTree = HeightAwareBST.of(largeRandomData);
         System.out.println("Height of height aware tree - for sorted values : "
                 + heightAwareTree.height());
-        BinarySearchTree<String> simpleBalancedBST = SimpleBalancedBST.of(data);
+    }
+
+    @Test
+    public void log_time_balanced_BST_large_random_data() {
+        BinarySearchTree<String> simpleBalancedBST = SimpleBalancedBST.of(largeRandomData);
         System.out.println("Height of Simple Balanced Tree - for sorted values : "
                 + simpleBalancedBST.height());
     }
