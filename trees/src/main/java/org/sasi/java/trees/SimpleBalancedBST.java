@@ -115,7 +115,7 @@ public class SimpleBalancedBST<T extends Comparable<T>> {
 
         @Override
         public int height() {
-            return Math.max(lesser.height(), greater.height())+1;
+            return height;
         }
     }
 }
