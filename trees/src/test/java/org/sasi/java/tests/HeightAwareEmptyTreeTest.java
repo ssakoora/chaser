@@ -31,6 +31,8 @@ public class HeightAwareEmptyTreeTest {
         BinarySearchTree<String> heightMemoizedBST = HeightAwareBST.of(data);
         Assertions.assertEquals(simpleBST.height(), heightMemoizedBST.height());
         for (String d : data) {
+            System.out.println(simpleBST.printSelf("\t", new StringBuffer()).toString());
+            System.out.println("To remove - "+d);
             Assertions.assertEquals(simpleBST.remove(d).height(), heightMemoizedBST.remove(d).height());
         }
         for (String d : data) {

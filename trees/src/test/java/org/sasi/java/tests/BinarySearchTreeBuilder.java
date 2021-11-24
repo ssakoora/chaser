@@ -1,10 +1,7 @@
 package org.sasi.java.tests;
 
 import org.junit.jupiter.api.Test;
-import org.sasi.java.trees.BinarySearchTree;
-import org.sasi.java.trees.HeightAwareBST;
-import org.sasi.java.trees.SimpleBalancedBST;
-import org.sasi.java.trees.SimpleBST;
+import org.sasi.java.trees.*;
 
 import java.util.List;
 import java.util.Random;
@@ -32,6 +29,13 @@ public class BinarySearchTreeBuilder {
     }
 
     @Test
+    public void log_time_balanced_AVL_BST_large_sorted_data() {
+        BinarySearchTree<Integer> avl = SimpleBalancedBST.of(largeSortedData);
+        System.out.println("Height of Simple Balanced Tree - for sorted values : "
+                + avl.height());
+    }
+
+    @Test
     public void log_time_simple_BST_large_random_data() {
         BinarySearchTree<String> heightAwareTree = HeightAwareBST.of(largeRandomData);
         System.out.println("Height of height aware tree - for sorted values : "
@@ -43,6 +47,24 @@ public class BinarySearchTreeBuilder {
         BinarySearchTree<String> simpleBalancedBST = SimpleBalancedBST.of(largeRandomData);
         System.out.println("Height of Simple Balanced Tree - for sorted values : "
                 + simpleBalancedBST.height());
+    }
+
+    @Test
+    public void log_time_balanced_AVL_BST_large_random_data() {
+        BinarySearchTree<String> avl = AVLBalancedBST.of(largeRandomData);
+        System.out.println("Height of AVL Tree - for sorted values : "
+                + avl.height());
+    }
+
+    @Test
+    public void randomTest() {
+        BinarySearchTree<Integer> bbst = SimpleBalancedBST.of(0);
+        System.out.println(bbst.printSelf("\t", new StringBuffer()).toString());
+        List<Integer> largeSortedData = IntStream.range(1, 10).boxed().collect(toList());
+        for (Integer i : largeSortedData) {
+            System.out.println("Adding : "+i);
+            bbst = bbst.add(i);
+        }
     }
 
     public static void main(String[] args) {

@@ -19,18 +19,14 @@ public class SimpleBalancedBST<T extends Comparable<T>> {
         public BinarySearchTree<T> add(T data) {
             return new SimpleBalancedBinarySearchNonEmptyTree<>(data,
                     new SimpleBalancedBinarySearchEmptyTree<>(),
-                    new SimpleBalancedBinarySearchEmptyTree<>(),
-                    1);
+                    new SimpleBalancedBinarySearchEmptyTree<>());
         }
     }
 
     static class SimpleBalancedBinarySearchNonEmptyTree<T extends Comparable<T>> extends SimpleBST.NonEmptyTree<T> {
 
-        private final int height;
-
-        public SimpleBalancedBinarySearchNonEmptyTree(T data, BinarySearchTree<T> lesser, BinarySearchTree<T> greater, int height) {
+        public SimpleBalancedBinarySearchNonEmptyTree(T data, BinarySearchTree<T> lesser, BinarySearchTree<T> greater) {
             super(data, lesser, greater);
-            this.height = height;
         }
 
         @Override
@@ -41,81 +37,54 @@ public class SimpleBalancedBST<T extends Comparable<T>> {
         @Override
         public BinarySearchTree<T> remove(T data) {
             if( data.compareTo(this.data) == 0)
-                if(!lesser.isEmpty()) {
-                    BinarySearchTree<T> newLesser = lesser.remove(lesser.getData().get());
-                    return new SimpleBalancedBinarySearchNonEmptyTree<>(
-                            lesser.getData().get(),
-                            newLesser,
-                            greater,
-                            Math.max(newLesser.height(), greater.height())+1
-                    );
-                } else if (!greater.isEmpty()) {
-                    BinarySearchTree<T> newGreater = greater.remove(greater.getData().get());
-                    return new SimpleBalancedBinarySearchNonEmptyTree<>(
-                            greater.getData().get(),
-                            lesser,
-                            newGreater,
-                            Math.max(lesser.height(), newGreater.height())+1
-                    );
-                } else
+                if(lesser.isEmpty() && greater.isEmpty())
                     return new SimpleBalancedBinarySearchEmptyTree<>();
+                else if(!lesser.isEmpty() && greater.isEmpty())
+                    return lesser;
+                else if(lesser.isEmpty() && !greater.isEmpty())
+                    return greater;
+                else {
+                    T biggestOnLesser = lesser.highest().get();
+                    return new SimpleBalancedBinarySearchNonEmptyTree<>(biggestOnLesser, lesser.remove(biggestOnLesser), greater);
+                }
             else if (data.compareTo(this.data) < 0)
-                return this.lesser.remove(data);
+                return new SimpleBalancedBinarySearchNonEmptyTree<>(this.data, this.lesser.remove(data), this.greater);
             else
-                return this.greater.remove(data);
+                return new SimpleBalancedBinarySearchNonEmptyTree<>(this.data, this.lesser, this.greater.remove(data));
         }
 
         private SimpleBalancedBinarySearchNonEmptyTree<T> addToTree(T data) {
             if(data.compareTo(this.data) == 0)
                 return this;
-            else if(data.compareTo(this.data) < 0) {
-                BinarySearchTree<T> newLesser = lesser.add(data);
-                return new SimpleBalancedBinarySearchNonEmptyTree<>(
-                        this.data,
-                        newLesser,
-                        greater,
-                        Math.max(newLesser.height(), greater.height())+1
-                );
-            } else {
-                BinarySearchTree<T> newGreater = greater.add(data);
-                return new SimpleBalancedBinarySearchNonEmptyTree<>(
-                        this.data,
-                        lesser,
-                        newGreater,
-                        Math.max(lesser.height(), newGreater.height())+1
-                );
-            }
+            else if(data.compareTo(this.data) < 0)
+                return new SimpleBalancedBinarySearchNonEmptyTree<>(this.data, lesser.add(data), greater);
+            else
+                return new SimpleBalancedBinarySearchNonEmptyTree<>(this.data, lesser, greater.add(data));
         }
 
-        private SimpleBalancedBinarySearchNonEmptyTree<T> balanced(SimpleBalancedBinarySearchNonEmptyTree<T> added) {
-            while(added.lesser.height() - added.greater.height() < -1   || added.lesser.height() - added.greater.height() > 1) {
+        public SimpleBalancedBinarySearchNonEmptyTree<T> balanced(SimpleBalancedBinarySearchNonEmptyTree<T> added) {
                 if (added.lesser.height() - added.greater.height() < -1 ){
+                        T toBeBumped = added.greater.lowest().get();
                         BinarySearchTree<T> newLesser = added.lesser.add(added.getData().get());
-                        BinarySearchTree<T> newGreater = added.greater.remove(added.greater.getData().get());
-                        added = new SimpleBalancedBinarySearchNonEmptyTree<>(
-                                added.greater.getData().get(),
+                        BinarySearchTree<T> newGreater = added.greater.remove(toBeBumped);
+                        return new SimpleBalancedBinarySearchNonEmptyTree<>(
+                                toBeBumped,
                                 newLesser,
-                                newGreater,
-                                Math.max(newLesser.height(), newGreater.height())+1
+                                newGreater
                         );
                     }
-                else {
-                        BinarySearchTree<T> newLesser = added.lesser.remove(added.lesser.getData().get());
+                else if (added.lesser.height() - added.greater.height() > 1 ){
+                        T toBeBumped = added.lesser.highest().get();
+                        BinarySearchTree<T> newLesser = added.lesser.remove(toBeBumped);
                         BinarySearchTree<T> newGreater = added.greater.add(added.getData().get());
-                        added = new SimpleBalancedBinarySearchNonEmptyTree<>(
-                                added.lesser.getData().get(),
+                        return new SimpleBalancedBinarySearchNonEmptyTree<>(
+                                toBeBumped,
                                 newLesser,
-                                newGreater,
-                                Math.max(newLesser.height(), newGreater.height())+1
+                                newGreater
                         );
                 }
-            }
-            return added;
-        }
-
-        @Override
-        public int height() {
-            return height;
+                else
+                    return added;
         }
     }
 }

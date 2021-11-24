@@ -17,7 +17,7 @@ public class HeightAwareBST<T extends Comparable<T>> {
 
         @Override
         public BinarySearchTree<T> add(T data) {
-            return new HeightAwareNonEmptyTree<>(data, new HeightAwareEmptyTree<>(), new HeightAwareEmptyTree<>(), 1);
+            return new HeightAwareNonEmptyTree<>(data, new HeightAwareEmptyTree<>(), new HeightAwareEmptyTree<>());
         }
     }
 
@@ -25,9 +25,9 @@ public class HeightAwareBST<T extends Comparable<T>> {
 
         private final int height;
 
-        public HeightAwareNonEmptyTree(T data, BinarySearchTree<T> lesser, BinarySearchTree<T> greater, int height) {
+        public HeightAwareNonEmptyTree(T data, BinarySearchTree<T> lesser, BinarySearchTree<T> greater) {
             super(data, lesser, greater);
-            this.height = height;
+            this.height = Math.max(lesser.height(), greater.height())+1;
         }
 
         public int getHeight() {
@@ -43,16 +43,14 @@ public class HeightAwareBST<T extends Comparable<T>> {
                 return new HeightAwareNonEmptyTree<>(
                         this.data,
                         newLesser,
-                        greater,
-                        Math.max(newLesser.height(), greater.height())+1
+                        greater
                 );
             } else {
                 BinarySearchTree<T> newGreater = greater.add(data);
                 return new HeightAwareNonEmptyTree<>(
                         this.data,
                         lesser,
-                        newGreater,
-                        Math.max(lesser.height(), newGreater.height())+1
+                        newGreater
                 );
             }
         }
@@ -60,24 +58,16 @@ public class HeightAwareBST<T extends Comparable<T>> {
         @Override
         public BinarySearchTree<T> remove(T data) {
             if( data.compareTo(this.data) == 0)
-                if(!lesser.isEmpty()) {
-                    BinarySearchTree<T> newLesser = lesser.remove(lesser.getData().get());
-                    return new HeightAwareNonEmptyTree<>(
-                            lesser.getData().get(),
-                            newLesser,
-                            greater,
-                            Math.max(newLesser.height(), greater.height())+1
-                    );
-                } else if (!greater.isEmpty()) {
-                    BinarySearchTree<T> newGreater = greater.remove(greater.getData().get());
-                    return new HeightAwareNonEmptyTree<>(
-                            greater.getData().get(),
-                            lesser,
-                            newGreater,
-                            Math.max(lesser.height(), newGreater.height())+1
-                    );
-                } else
+                if(lesser.isEmpty() && greater.isEmpty())
                     return new HeightAwareEmptyTree<>();
+                else if(!lesser.isEmpty() && greater.isEmpty())
+                    return lesser;
+                else if(lesser.isEmpty() && !greater.isEmpty())
+                    return greater;
+                else {
+                    T biggestOnLesser = lesser.highest().get();
+                    return new HeightAwareNonEmptyTree<>(biggestOnLesser, lesser.remove(biggestOnLesser), greater);
+                }
             else if (data.compareTo(this.data) < 0)
                 return this.lesser.remove(data);
             else

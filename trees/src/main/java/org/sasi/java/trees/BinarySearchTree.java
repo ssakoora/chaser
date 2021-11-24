@@ -22,6 +22,5 @@ public abstract class BinarySearchTree<T extends  Comparable<T>> {
         }
         return addedTree;
     }
-
 }
 

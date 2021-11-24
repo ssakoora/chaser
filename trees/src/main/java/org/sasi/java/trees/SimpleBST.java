@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class SimpleBST<T extends Comparable<T>>  {
+public class SimpleBST<T extends Comparable<T>>  implements BSTBuilder<T> {
 
     public static <T extends Comparable<T>> BinarySearchTree<T> of(T data) {
         return of(List.of(data));
@@ -14,11 +14,15 @@ public class SimpleBST<T extends Comparable<T>>  {
         return new EmptyTree<T>().addAll(allData);
     }
 
+    public <T extends Comparable<T>> BinarySearchTree<T> validateAndCreate(T data,
+                                                                           BinarySearchTree<T> lesser,
+                                                                           BinarySearchTree<T> greater) {
+        return new NonEmptyTree<>(data, lesser, greater);
+    }
+
     static class EmptyTree<T extends Comparable<T>> extends BinarySearchTree<T> {
         @Override
-        public boolean isEmpty() {
-            return true;
-        }
+        public boolean isEmpty() { return true; }
 
         @Override
         public int size() {
@@ -46,7 +50,9 @@ public class SimpleBST<T extends Comparable<T>>  {
         }
 
         @Override
-        public StringBuffer printSelf(String prefix, StringBuffer bufferToPrint) { return bufferToPrint.append(prefix).append("|___ NONE "); }
+        public StringBuffer printSelf(String prefix, StringBuffer bufferToPrint) {
+            return bufferToPrint.append(prefix).append("|___ NONE ");
+        }
 
         @Override
         public List<T> toList() {
@@ -83,9 +89,23 @@ public class SimpleBST<T extends Comparable<T>>  {
         public final BinarySearchTree<T> greater;
 
         public NonEmptyTree(T data, BinarySearchTree<T> lesser, BinarySearchTree<T> greater) {
+            if (! areInvariantsValid(data, lesser, greater))
+                throw new IllegalArgumentException(data+":"+lesser.getData()+":"+greater.getData());
             this.data = data;
             this.lesser = lesser;
             this.greater = greater;
+        }
+
+        private boolean areInvariantsValid(T data, BinarySearchTree<T> lesser, BinarySearchTree<T> greater) {
+            return (isLesserInvariantValid(data, lesser) && isGreaterInvariantValid(data, greater));
+        }
+
+        private boolean isGreaterInvariantValid(T data, BinarySearchTree<T> greater) {
+            return !greater.getData().isPresent() || greater.getData().get().compareTo(data) > 0;
+        }
+
+        private boolean isLesserInvariantValid(T data, BinarySearchTree<T> lesser) {
+            return !lesser.getData().isPresent() || lesser.getData().get().compareTo(data) < 0;
         }
 
         @Override
@@ -123,12 +143,16 @@ public class SimpleBST<T extends Comparable<T>>  {
         @Override
         public BinarySearchTree<T> remove(T data) {
             if( data.compareTo(this.data) == 0)
-                if(!lesser.isEmpty())
-                    return new NonEmptyTree<>(lesser.getData().get(), lesser.remove(lesser.getData().get()), greater);
-                else if (!greater.isEmpty())
-                    return new NonEmptyTree<>(greater.getData().get(), lesser, greater.remove(greater.getData().get()));
-                else
+                if(lesser.isEmpty() && greater.isEmpty())
                     return new EmptyTree<>();
+                else if(!lesser.isEmpty() && greater.isEmpty())
+                    return lesser;
+                else if(lesser.isEmpty() && !greater.isEmpty())
+                    return greater;
+                else {
+                    T biggestOnLesser = lesser.highest().get();
+                    return new NonEmptyTree<>(biggestOnLesser, lesser.remove(biggestOnLesser), greater);
+                }
             else if (data.compareTo(this.data) < 0)
                 return this.lesser.remove(data);
             else
