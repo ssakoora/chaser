@@ -2,7 +2,7 @@ package org.sasi.java.trees;
 
 import java.util.List;
 
-public class HeightAwareBST<T extends Comparable<T>> {
+public class HeightAwareBST {
 
     public static <T extends Comparable<T>> BinarySearchTree<T> of(T data) {
         return of(List.of(data));
@@ -30,19 +30,15 @@ public class HeightAwareBST<T extends Comparable<T>> {
             this.height = Math.max(lesser.height(), greater.height())+1;
         }
 
-        public int getHeight() {
-            return this.height;
-        }
-
         @Override
-        public HeightAwareNonEmptyTree<T> add(T data) {
+        public BinarySearchTree<T> add(T data) {
             if(data.compareTo(this.data) == 0)
                 return this;
             else if(data.compareTo(this.data) < 0) {
-                BinarySearchTree<T> newLesser = lesser.add(data);
+                BinarySearchTree<T> newLower = lesser.add(data);
                 return new HeightAwareNonEmptyTree<>(
                         this.data,
-                        newLesser,
+                        newLower,
                         greater
                 );
             } else {
@@ -66,7 +62,8 @@ public class HeightAwareBST<T extends Comparable<T>> {
                     return greater;
                 else {
                     T biggestOnLesser = lesser.highest().get();
-                    return new HeightAwareNonEmptyTree<>(biggestOnLesser, lesser.remove(biggestOnLesser), greater);
+                    BinarySearchTree<T> newLesser = lesser.remove(biggestOnLesser);
+                    return new HeightAwareNonEmptyTree<>(biggestOnLesser, newLesser, greater);
                 }
             else if (data.compareTo(this.data) < 0)
                 return this.lesser.remove(data);

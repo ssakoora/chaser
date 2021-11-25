@@ -23,14 +23,14 @@ public class SimpleBalancedBST<T extends Comparable<T>> {
         }
     }
 
-    static class SimpleBalancedBinarySearchNonEmptyTree<T extends Comparable<T>> extends SimpleBST.NonEmptyTree<T> {
+    static class SimpleBalancedBinarySearchNonEmptyTree<T extends Comparable<T>> extends HeightAwareBST.HeightAwareNonEmptyTree<T> {
 
         public SimpleBalancedBinarySearchNonEmptyTree(T data, BinarySearchTree<T> lesser, BinarySearchTree<T> greater) {
             super(data, lesser, greater);
         }
 
         @Override
-        public SimpleBalancedBinarySearchNonEmptyTree<T> add(T data) {
+        public BinarySearchTree<T> add(T data) {
             return balanced(addToTree(data));
         }
 
@@ -45,25 +45,32 @@ public class SimpleBalancedBST<T extends Comparable<T>> {
                     return greater;
                 else {
                     T biggestOnLesser = lesser.highest().get();
-                    return new SimpleBalancedBinarySearchNonEmptyTree<>(biggestOnLesser, lesser.remove(biggestOnLesser), greater);
+                    BinarySearchTree<T> newLesser = lesser.remove(biggestOnLesser);
+                    return new SimpleBalancedBinarySearchNonEmptyTree<>(biggestOnLesser, newLesser, greater);
                 }
-            else if (data.compareTo(this.data) < 0)
-                return new SimpleBalancedBinarySearchNonEmptyTree<>(this.data, this.lesser.remove(data), this.greater);
-            else
-                return new SimpleBalancedBinarySearchNonEmptyTree<>(this.data, this.lesser, this.greater.remove(data));
+            else if (data.compareTo(this.data) < 0) {
+                BinarySearchTree<T> newLesser = this.lesser.remove(data);
+                return new SimpleBalancedBinarySearchNonEmptyTree<>(this.data, newLesser, this.greater);
+            } else {
+                BinarySearchTree<T> newGreater = this.greater.remove(data);
+                return new SimpleBalancedBinarySearchNonEmptyTree<>(this.data, this.lesser, newGreater);
+            }
         }
 
         private SimpleBalancedBinarySearchNonEmptyTree<T> addToTree(T data) {
             if(data.compareTo(this.data) == 0)
                 return this;
-            else if(data.compareTo(this.data) < 0)
-                return new SimpleBalancedBinarySearchNonEmptyTree<>(this.data, lesser.add(data), greater);
-            else
-                return new SimpleBalancedBinarySearchNonEmptyTree<>(this.data, lesser, greater.add(data));
+            else if(data.compareTo(this.data) < 0) {
+                BinarySearchTree<T> newLesser = lesser.add(data);
+                return new SimpleBalancedBinarySearchNonEmptyTree<>(this.data, newLesser, greater);
+            } else {
+                BinarySearchTree<T> newGreater = greater.add(data);
+                return new SimpleBalancedBinarySearchNonEmptyTree<>(this.data, lesser, newGreater);
+            }
         }
 
         public SimpleBalancedBinarySearchNonEmptyTree<T> balanced(SimpleBalancedBinarySearchNonEmptyTree<T> added) {
-                if (added.lesser.height() - added.greater.height() < -1 ){
+                if (isRightHeavy(added)){
                         T toBeBumped = added.greater.lowest().get();
                         BinarySearchTree<T> newLesser = added.lesser.add(added.getData().get());
                         BinarySearchTree<T> newGreater = added.greater.remove(toBeBumped);
@@ -73,7 +80,7 @@ public class SimpleBalancedBST<T extends Comparable<T>> {
                                 newGreater
                         );
                     }
-                else if (added.lesser.height() - added.greater.height() > 1 ){
+                else if (isLeftHeavy(added)){
                         T toBeBumped = added.lesser.highest().get();
                         BinarySearchTree<T> newLesser = added.lesser.remove(toBeBumped);
                         BinarySearchTree<T> newGreater = added.greater.add(added.getData().get());
@@ -86,5 +93,15 @@ public class SimpleBalancedBST<T extends Comparable<T>> {
                 else
                     return added;
         }
+
+        public boolean isLeftHeavy(SimpleBalancedBinarySearchNonEmptyTree added) {
+            return added.lesser().height() - added.greater().height() > 1;
+        }
+
+        public boolean isRightHeavy(SimpleBalancedBinarySearchNonEmptyTree added) {
+            return added.lesser().height() - added.greater().height() < -1;
+        }
+
     }
+
 }

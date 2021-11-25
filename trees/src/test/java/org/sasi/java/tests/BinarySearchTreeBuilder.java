@@ -1,8 +1,10 @@
 package org.sasi.java.tests;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.sasi.java.trees.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
@@ -18,21 +20,24 @@ public class BinarySearchTreeBuilder {
     public void log_time_simple_BST_large_sorted_data() {
         BinarySearchTree<Integer> heightAwareTree = HeightAwareBST.of(largeSortedData);
         System.out.println("Height of height aware tree - for sorted values : "
-                + heightAwareTree.height());
+                + heightAwareTree.height()+":"+heightAwareTree.size());
+        Assertions.assertArrayEquals(largeSortedData.toArray(new Integer[0]), heightAwareTree.toList().toArray(new Integer[0]));
     }
 
     @Test
     public void log_time_balanced_BST_large_sorted_data() {
         BinarySearchTree<Integer> simpleBalancedBST = SimpleBalancedBST.of(largeSortedData);
         System.out.println("Height of Simple Balanced Tree - for sorted values : "
-                + simpleBalancedBST.height());
+                + simpleBalancedBST.height()+":"+simpleBalancedBST.size());
+        Assertions.assertArrayEquals(largeSortedData.toArray(new Integer[0]), simpleBalancedBST.toList().toArray(new Integer[0]));
     }
 
     @Test
     public void log_time_balanced_AVL_BST_large_sorted_data() {
-        BinarySearchTree<Integer> avl = SimpleBalancedBST.of(largeSortedData);
+        BinarySearchTree<Integer> avl = AVLBalancedBST.of(largeSortedData);
         System.out.println("Height of Simple Balanced Tree - for sorted values : "
                 + avl.height());
+        Assertions.assertArrayEquals(largeSortedData.toArray(new Integer[0]), avl.toList().toArray(new Integer[0]));
     }
 
     @Test
@@ -40,6 +45,7 @@ public class BinarySearchTreeBuilder {
         BinarySearchTree<String> heightAwareTree = HeightAwareBST.of(largeRandomData);
         System.out.println("Height of height aware tree - for sorted values : "
                 + heightAwareTree.height());
+        Assertions.assertArrayEquals(largeRandomData.stream().sorted().toArray(), heightAwareTree.toList().toArray(new String[0]) );
     }
 
     @Test
@@ -47,6 +53,7 @@ public class BinarySearchTreeBuilder {
         BinarySearchTree<String> simpleBalancedBST = SimpleBalancedBST.of(largeRandomData);
         System.out.println("Height of Simple Balanced Tree - for sorted values : "
                 + simpleBalancedBST.height());
+        Assertions.assertArrayEquals(largeRandomData.stream().sorted().toArray(), simpleBalancedBST.toList().toArray(new String[0]) );
     }
 
     @Test
@@ -54,6 +61,7 @@ public class BinarySearchTreeBuilder {
         BinarySearchTree<String> avl = AVLBalancedBST.of(largeRandomData);
         System.out.println("Height of AVL Tree - for sorted values : "
                 + avl.height());
+        Assertions.assertArrayEquals(largeRandomData.stream().sorted().toArray(), avl.toList().toArray(new String[0]) );
     }
 
     @Test

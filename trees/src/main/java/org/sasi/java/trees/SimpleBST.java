@@ -1,10 +1,8 @@
 package org.sasi.java.trees;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-public class SimpleBST<T extends Comparable<T>>  implements BSTBuilder<T> {
+public class SimpleBST {
 
     public static <T extends Comparable<T>> BinarySearchTree<T> of(T data) {
         return of(List.of(data));
@@ -12,12 +10,6 @@ public class SimpleBST<T extends Comparable<T>>  implements BSTBuilder<T> {
 
     public static <T extends Comparable<T>> BinarySearchTree<T> of(List<T> allData) {
         return new EmptyTree<T>().addAll(allData);
-    }
-
-    public <T extends Comparable<T>> BinarySearchTree<T> validateAndCreate(T data,
-                                                                           BinarySearchTree<T> lesser,
-                                                                           BinarySearchTree<T> greater) {
-        return new NonEmptyTree<>(data, lesser, greater);
     }
 
     static class EmptyTree<T extends Comparable<T>> extends BinarySearchTree<T> {
@@ -72,6 +64,16 @@ public class SimpleBST<T extends Comparable<T>>  implements BSTBuilder<T> {
         @Override
         public int height() {
             return 0;
+        }
+
+        @Override
+        public BinarySearchTree<T> lesser() {
+            return null;
+        }
+
+        @Override
+        public BinarySearchTree<T> greater() {
+            return null;
         }
 
         @Override
@@ -190,6 +192,16 @@ public class SimpleBST<T extends Comparable<T>>  implements BSTBuilder<T> {
         @Override
         public int height() {
             return Math.max(1+ lesser.height(), 1+greater.height());
+        }
+
+        @Override
+        public BinarySearchTree<T> lesser() {
+            return lesser;
+        }
+
+        @Override
+        public BinarySearchTree<T> greater() {
+            return greater;
         }
     }
 }

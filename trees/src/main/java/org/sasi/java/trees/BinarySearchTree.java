@@ -1,7 +1,9 @@
 package org.sasi.java.trees;
 
+import java.util.AbstractList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public abstract class BinarySearchTree<T extends  Comparable<T>> {
     public abstract boolean isEmpty();
@@ -21,6 +23,12 @@ public abstract class BinarySearchTree<T extends  Comparable<T>> {
             addedTree = addedTree.add(data);
         }
         return addedTree;
+    }
+    public abstract BinarySearchTree<T> lesser();
+    public abstract BinarySearchTree<T> greater();
+
+    public <R extends BinarySearchTree<T>, S extends BinarySearchTree<T>> S addAndTransform(R source, Function<R, S> transformer) {
+        return transformer.apply(source);
     }
 }
 
